@@ -3,6 +3,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import ma.sofisoft.Entities.AccVat;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ public class AccVatRepository implements PanacheRepository<AccVat> {
     public AccVat findByCode(String code) {
         return find("code", code).firstResult();
     }
+    public AccVat findByRate(BigDecimal rate ){return find("rate", rate).firstResult();}
 
     public Optional<AccVat> findByCodeOptional(String code) {
         return find("code", code).firstResultOptional();

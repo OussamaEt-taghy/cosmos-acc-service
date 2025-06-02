@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 @Entity
 @Table(name = "acc_vat", indexes = {
-        @Index(name = "ix_acc_vat_code", columnList = "code", unique = true)
+        @Index(name = "ix_acc_vat_code", columnList = "code", unique = true),
+        @Index(name = "ix_acc_vat_rate", columnList = "rate", unique = true)
 })
 @Getter
 @Setter

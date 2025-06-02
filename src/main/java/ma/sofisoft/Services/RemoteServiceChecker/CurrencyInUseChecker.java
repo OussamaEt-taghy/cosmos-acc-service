@@ -12,5 +12,6 @@ public class CurrencyInUseChecker {
     PimServiceClient pimServiceClient;
     public boolean isInUse(Long currencyId) {
         return pimServiceClient.isCurrencyInUse(currencyId);
+
     }
 }

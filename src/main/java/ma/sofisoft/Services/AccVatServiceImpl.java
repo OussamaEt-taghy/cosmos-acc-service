@@ -41,10 +41,14 @@ public class AccVatServiceImpl implements AccVatService {
     public ResponseAccVat createVat(CreateAccVatRequest dto, String createdBy) {
         log.info("Creating new VAT with code: {}", dto.getCode());
         validateCreateVatData(dto);
+
+        // Validation de la duplication du code
         if (accVatRepository.findByCode(dto.getCode()) != null) {
             throw new DuplicateVatCodeException(dto.getCode());
         }
-        // Récupération et validation des comptes
+        if (accVatRepository.findByRate(dto.getRate()) != null) {
+            throw new DuplicateVatRateException(dto.getRate());
+        }
         AccAccount purchaseAccount = validateAndGetAccount(dto.getPurchaseAccountId(), "Purchase account");
         AccAccount salesAccount = validateAndGetAccount(dto.getSalesAccountId(), "Sales account");
 
@@ -62,17 +66,29 @@ public class AccVatServiceImpl implements AccVatService {
     public ResponseAccVat updateVat(Long id, UpdateAccVatRequest dto,String updatedBy) {
         log.info("Updating VAT with ID: {}", id);
         validateUpdateVatData(dto);
+
         if (dto.getId() != null && !id.equals(dto.getId())) {
             throw new InvalidVatDataException("L'ID du chemin et l'ID du DTO ne correspondent pas");
         }
         AccVat vat = accVatRepository.findByIdOptional(id)
                 .orElseThrow(() -> new VatNotFoundException(id));
+
+        // Validation de la duplication du code
         if (dto.getCode() != null && !dto.getCode().equals(vat.getCode())) {
             AccVat existingWithCode = accVatRepository.findByCode(dto.getCode());
             if (existingWithCode != null && !existingWithCode.getId().equals(id)) {
                 throw new DuplicateVatCodeException(dto.getCode());
             }
         }
+
+        // Validation de la duplication du taux
+        if (dto.getRate() != null && !dto.getRate().equals(vat.getRate())) {
+            AccVat existingWithRate = accVatRepository.findByRate(dto.getRate());
+            if (existingWithRate != null && !existingWithRate.getId().equals(id)) {
+                throw new DuplicateVatRateException(dto.getRate());
+            }
+        }
+
         AccAccount purchaseAccount = null;
         AccAccount salesAccount = null;
 
@@ -83,11 +99,13 @@ public class AccVatServiceImpl implements AccVatService {
         if (dto.getSalesAccountId() != null) {
             salesAccount = validateAndGetAccount(dto.getSalesAccountId(), "Sales account");
         }
+
         if (purchaseAccount != null || salesAccount != null) {
             AccAccount finalPurchaseAccount = purchaseAccount != null ? purchaseAccount : vat.getPurchaseAccount();
             AccAccount finalSalesAccount = salesAccount != null ? salesAccount : vat.getSalesAccount();
             validateAccountsForVat(finalPurchaseAccount, finalSalesAccount);
         }
+
         accVatMapper.toEntityFromUpdateDto(vat, dto, purchaseAccount, salesAccount, updatedBy);
         accVatRepository.persist(vat);
         log.info("VAT updated successfully");
@@ -143,7 +161,6 @@ public class AccVatServiceImpl implements AccVatService {
             throw new InvalidVatDataException("L'ID de compte de vente est requis");
         }
     }
-
     private void validateUpdateVatData(UpdateAccVatRequest dto) {
         if (dto.getCode() != null) {
             if (dto.getCode().trim().isEmpty()) {

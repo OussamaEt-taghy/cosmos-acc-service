@@ -1,5 +1,4 @@
 package ma.sofisoft.Exceptions.AccCurrencyExceptions;
-
 import jakarta.ws.rs.core.Response;
 import ma.sofisoft.Exceptions.BusinessException;
 

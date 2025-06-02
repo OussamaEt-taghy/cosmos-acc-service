@@ -1,7 +1,4 @@
 package ma.sofisoft.Exceptions;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

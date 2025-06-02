@@ -34,7 +34,6 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
                             path))
                     .build();
         }
-
         // Converting JPA/Hibernate exceptions
         if (exception instanceof EntityNotFoundException) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -45,14 +44,12 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
                             path))
                     .build();
         }
-
         // Database constraint violated (exp duplicate)
         if (exception instanceof PersistenceException && exception.getCause() instanceof ConstraintViolationException) {
             ConstraintViolationException cve = (ConstraintViolationException) exception.getCause();
             String constraintName = cve.getConstraintName();
             String message = "Violation des contraintes de la base de données";
             String errorCode = "DB_CONSTRAINT";
-
             // Identification of specific constraints
             if (constraintName != null) {
                 if (constraintName.contains("ix_acc_account_code")) {
@@ -68,7 +65,6 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
                             path))
                     .build();
         }
-
         // Handling illegal state errors
         if (exception instanceof IllegalStateException) {
             return Response.status(Response.Status.CONFLICT)
@@ -79,7 +75,6 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
                             path))
                     .build();
         }
-
         // Invalid argument (exp , null or poorly formatted parameter)
         if (exception instanceof IllegalArgumentException) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -90,7 +85,6 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
                             path))
                     .build();
         }
-
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(ErrorResponse.of(
                         500,
@@ -98,5 +92,4 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
                         "Une erreur interne s'est produite", path))
                 .build();
     }
-
 }

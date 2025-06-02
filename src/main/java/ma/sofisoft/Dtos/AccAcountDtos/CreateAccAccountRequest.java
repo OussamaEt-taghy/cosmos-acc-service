@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import ma.sofisoft.ENUMs.AccountType;
 import java.math.BigDecimal;
+import java.util.Map;
+
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class CreateAccAccountRequest {
     @NotBlank(message = "Account code is required")
@@ -14,5 +16,7 @@ public class CreateAccAccountRequest {
     private BigDecimal openingBalance;
     @NotNull(message = "IsAuxiliary flag is required")
     private Boolean isAuxiliary;
+
+    //private Map<Long, Map<String, String>> translations;
 }
 

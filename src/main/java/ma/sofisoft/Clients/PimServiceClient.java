@@ -1,12 +1,13 @@
 package ma.sofisoft.Clients;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@Path("/qlq")
+@Path("/PIM-API")
 @RegisterRestClient(configKey = "cosmos-pim-service")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public interface PimServiceClient {
     @GET
     @Path("/currency-in-use/{currencyId}")

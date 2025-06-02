@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cosmos-acc-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cosmos-acc-service
+  template:
+    metadata:
+      labels:
+        app: cosmos-acc-service
+    spec:
+      containers:
+        - name: cosmos-acc-service
+          image: amdevops36/cosmos-acc-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8083
+          envFrom:
+            - configMapRef:
+                name: cosmos-acc-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cosmos-acc-service
+  labels:
+    app: cosmos-acc-service
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8083
+      targetPort: 8083
+  selector:
+    app: cosmos-acc-service
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cosmos-acc-config
+  labels:
+    app: cosmos-acc-service
+data:
+  IAM_SERVICE_URL: "http://192.168.1.7:32037/API"
+  COSMOS_KEYCLOAK_AUTH_SERVER_URL: "http://192.168.1.7:32037"
+  COSMOS_KEYCLOAK_ADMIN_REALM: "cosmos"
+  COSMOS_KEYCLOAK_REALM: "cosmos"
+  COSMOS_KEYCLOAK_ADMIN_CLIENT_ID: "acc-service"
+  COSMOS_KEYCLOAK_ADMIN_CLIENT_SECRET: "4Hp7h46eFCkqPFbXRCcILFanIX1ISn0k"
+  DB_USERNAME: "postgres"
+  DB_PASSWORD: "cosmos@@2025"
+  DB_PORT: "5432"
+  DB_NAME: "cosmos_acc_db"
+  ACC_DB_HOST: "keycloak-db"
+  PIM_SERVICE_URL: "http://cosmos-pim-service:8082"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cosmos-acc-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /cosmos-acc-swagger
+            pathType: Prefix
+            backend:
+              service:
+                name: cosmos-acc-service
+                port:
+                  number: 8083
+          - path: /ACC-API
+            pathType: Prefix
+            backend:
+              service:
+                name: cosmos-acc-service
+                port:
+                  number: 8083
+          - path: /cosmos-acc-swagger
+            pathType: Prefix
+            backend:
+              service:
+                name: cosmos-acc-service
+                port:
+                  number: 8083
+
+          - path: /cosmos-acc-openapi
+            pathType: Prefix
+            backend:
+              service:
+                name: cosmos-acc-service
+                port:
+                  number: 8083

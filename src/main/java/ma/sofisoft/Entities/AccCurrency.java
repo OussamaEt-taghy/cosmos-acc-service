@@ -31,6 +31,9 @@ public class AccCurrency {
     @Column(name = "Description", nullable = false, length = 50)
     private String description;
 
+    @Column(name = "DescriptionCent", length = 50)
+    private String descriptionCent;
+
     @Column(name = "Purchaserate", nullable = false, precision = 18, scale = 3)
     private BigDecimal purchaseRate;
 

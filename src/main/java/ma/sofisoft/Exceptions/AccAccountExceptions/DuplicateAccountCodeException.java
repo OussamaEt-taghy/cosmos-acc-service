@@ -1,6 +1,4 @@
 package ma.sofisoft.Exceptions.AccAccountExceptions;
-
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.Response;
 import ma.sofisoft.Exceptions.BusinessException;
 public class DuplicateAccountCodeException extends BusinessException {

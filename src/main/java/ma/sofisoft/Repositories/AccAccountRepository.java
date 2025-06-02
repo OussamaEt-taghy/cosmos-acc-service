@@ -29,4 +29,19 @@ public class AccAccountRepository implements PanacheRepository<AccAccount> {
     public boolean existsByCodeAndIdNot(String code, Long id) {
         return count("code = ?1 and id != ?2", code, id) > 0;
     }
+
+    public boolean canBeDeleted(Long accountId) {
+        // Vérifier les comptes enfants
+        if (count("parent.id", accountId) > 0) {
+            return false;
+        }
+
+        // Vérifier les références dans acc_vat
+        long vatReferences = getEntityManager()
+                .createQuery("SELECT COUNT(v) FROM AccVat v WHERE v.purchaseAccount.id = :id OR v.salesAccount.id = :id", Long.class)
+                .setParameter("id", accountId)
+                .getSingleResult();
+
+        return vatReferences == 0;
+    }
 }

@@ -9,6 +9,7 @@ public class ResponseAccCurrency {
     private String code;
     private String name;
     private String description;
+    private String descriptionCent;
     private BigDecimal purchaseRate;
     private BigDecimal salesRate;
     private BigDecimal referenceRate;

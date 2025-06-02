@@ -1,8 +1,6 @@
 package ma.sofisoft.Exceptions.AccCurrencyExceptions;
-
 import jakarta.ws.rs.core.Response;
 import ma.sofisoft.Exceptions.BusinessException;
-
 public class CurrencyNotFoundException extends BusinessException {
     public CurrencyNotFoundException(Long id) {
         super("Devise non trouvée avec l'ID: " + id,

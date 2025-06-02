@@ -12,6 +12,7 @@ public class UpdateAccCurrencyRequest {
     @Size(max = 50, message = "Currency name cannot exceed 50 characters")
     private String name;
     private String description;
+    private String descriptionCent;
     @Positive(message = "Purchase rate must be positive")
     private BigDecimal purchaseRate;
     @Positive(message = "Sales rate must be positive")

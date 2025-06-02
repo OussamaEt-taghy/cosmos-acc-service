@@ -5,7 +5,7 @@ import ma.sofisoft.Exceptions.BusinessException;
 
 public class DuplicateVatCodeException extends BusinessException {
     public DuplicateVatCodeException(String code) {
-        super("VAT with code '" + code + "' existe déjà",
+        super("TVA avec Code '" + code + "' existe déjà",
                 "DUPLICATE_VAT_CODE",
                 Response.Status.CONFLICT.getStatusCode());
     }

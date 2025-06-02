@@ -3,6 +3,8 @@ import lombok.*;
 import ma.sofisoft.ENUMs.AccountType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
+
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class ResponseAccAccountDto {
     private Long id;
@@ -15,5 +17,7 @@ public class ResponseAccAccountDto {
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
+
+   // private Map<Long, Map<String, String>> translations;
 }
 
